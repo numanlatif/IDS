@@ -2,6 +2,7 @@
 # CSC461 – Assignment1 – Web Scraping
 # Numan Latif
 # FA21-BSE-039
+# In this task we scrap the data from imdb wesite of 5 movies
 
 import requests
 from bs4 import BeautifulSoup
