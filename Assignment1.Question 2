@@ -1,0 +1,64 @@
+# 18 Sept 2023
+# CSC461 – Assignment1 – Web Scraping
+# Numan Latif
+# FA21-BSE-039
+# In this task we scrape data from 2 websites in whih we get data of the specific date of person who born and events happen in a specific date
+
+
+import requests
+from bs4 import BeautifulSoup
+
+
+def scrape_timeanddate(date):
+    url = f"https://www.timeanddate.com/on-this-day/{date}"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    
+    born_section = soup.find("div", class_="tpl-right")
+    if born_section:
+        born_people = born_section.find_all("p")
+        return [p.get_text(strip=True) for p in born_people]
+    else:
+        return []
+
+
+def scrape_britannica(date):
+    url = f"https://www.britannica.com/on-this-day/{date}"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    # Find the events section
+    events_section = soup.find("div", class_="related-insights-content")
+    if events_section:
+        events = events_section.find_all("p")
+        return [event.get_text(strip=True) for event in events]
+    else:
+        return []
+
+
+birthdate = "august-14"
+
+
+timeanddate_info = scrape_timeanddate(birthdate)
+britannica_info = scrape_britannica(birthdate)
+
+
+with open("birth_info.txt", "w") as file:
+    file.write("Historical Events and People on August 14\n")
+    file.write("-" * 40 + "\n")
+    
+    file.write("From 'timeanddate.com':\n")
+    for person in timeanddate_info:
+        file.write(f"- {person}\n")
+
+    file.write("\nFrom 'britannica.com':\n")
+    for event in britannica_info:
+        file.write(f"- {event}\n")
+        file = open("birth_info.txt", "r")
+        event = file. read()
+        print(event)
+        file. close()
+
+
+print("Information has been scraped and written to 'birth_info.txt'.")
